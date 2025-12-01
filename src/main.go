@@ -15,14 +15,17 @@ var upgrader = websocket.Upgrader{
 }
 
 func wsHandler(w http.ResponseWriter, r *http.Request) {
-	// Upgrade the HTTP connection to a WebSocket connection
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Println("Error upgrading:", err)
 		return
 	}
 	defer conn.Close()
-	// Listen for incoming messages
+
+	go handleConnection(conn)
+}
+
+func handleConnection(conn *websocket.Conn) {
 	for {
 		// Read message from the client
 		_, message, err := conn.ReadMessage()
