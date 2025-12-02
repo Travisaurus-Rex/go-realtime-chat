@@ -20,9 +20,11 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error upgrading:", err)
 		return
 	}
-	defer conn.Close()
 
-	go handleConnection(conn)
+	go func() {
+		defer conn.Close()
+		handleConnection(conn)
+	}()
 }
 
 func handleConnection(conn *websocket.Conn) {
